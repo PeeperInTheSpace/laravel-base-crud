@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Comic;
+use Illuminate\Http\Request;
 
 class ComicController extends Controller
 {
@@ -14,8 +14,8 @@ class ComicController extends Controller
      */
     public function index()
     {
-        $data = Comic::all();
-        return view('comics.index', compact('data'));
+        $comics_list = Comic::all();
+        return view('comics.index', compact('comics_list'));
     }
 
     /**
@@ -37,6 +37,7 @@ class ComicController extends Controller
     public function store(Request $request)
     {
         $data = $request->all();
+        $request->validate($this->getValidationRules());
 
         $new_comic = new Comic();
         $new_comic->fill($data);
@@ -60,7 +61,8 @@ class ComicController extends Controller
      */
     public function show($id)
     {
-        //
+        $selected_comic = Comic::find($id);
+        return view('comics.show', compact('selected_comic'));
     }
 
     /**
@@ -71,7 +73,8 @@ class ComicController extends Controller
      */
     public function edit($id)
     {
-        //
+        $comic_to_update = Comic::findOrFail($id);
+        return view('comics.edit', compact('comic_to_update'));
     }
 
     /**
@@ -83,7 +86,14 @@ class ComicController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+
+        $request->validate($this->getValidationRules());
+
+        $data = $request ->all();
+        $comic_to_update = Comic::findOrFail($id);
+        $comic_to_update ->update($data);
+
+        return redirect()->route('comics.show', ['comic' => $comic_to_update->id]);
     }
 
     /**
@@ -94,6 +104,20 @@ class ComicController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $comic = Comic::findOrFail($id);
+        $comic->delete();
+        return redirect()->route('comics.index');
+    }
+
+    private function getValidationRules() {
+        return [
+            'title'=>'required|max:100|min:3',
+            'description'=>'required',
+            'thumb'=>'required',
+            'price'=>'required',
+            'series'=>'required|max:100',
+            'sale_date'=>'required',
+            'type'=>'required|max:50'
+        ];
     }
 }

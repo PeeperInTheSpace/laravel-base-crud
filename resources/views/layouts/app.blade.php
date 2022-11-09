@@ -7,7 +7,6 @@
     <title>Comics</title>
 </head>
 <body>
-
     <header>
         <span>--NAVBAR--</span>
         <span><a href="{{route('homepage')}}">Home</a></span>
@@ -15,6 +14,8 @@
         <span><a href="{{route('comics.create')}}">Crea un fumetto</a></span>
         <hr>
     </header>
+
+    @yield('main_content')
 
 </body>
 </html>
