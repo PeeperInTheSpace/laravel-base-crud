@@ -1,5 +1,5 @@
 <ul>
-    @foreach ($comics_list as $comic)
+    @foreach ($data as $comic)
         <li>
             <hr>
             <a href=" {{route('comics.show', ['comic' => $comic->id]) }} "><h2> {{$comic->title}} </h2></a>
